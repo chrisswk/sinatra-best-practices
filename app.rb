@@ -18,22 +18,23 @@ class SimpleApp < Sinatra::Base
     return !!session[:user_id]
   end
 
-  get '/' do
-    erb :login
+  show_login = lambda do
+    erb: login
   end
 
-  get '/sessions/new' do
-    erb :login
-  end
-
-  post '/sessions' do
+  receive_login = lambda do
     session[:user_id] = params["user_id"]
-    #redirect('/secrets')
+    redirect '/secrets'
   end
 
-  get '/secrets' do
+  show_secrets = lambda do
     require_logged_in
     erb :secrets
   end
-  
+
+  get '/', &show_login
+  get '/sessions/new', &show_login
+  post '/sessions', &receive_login
+  get '/secrets', &show_secrets
+   
 end
